@@ -29,9 +29,6 @@ export default createStore({
       }
 
       return title
-    },
-    $questions: (state,getters) => (id) => {
-      return getters.faqCategories[id].questions
     }
   },
 });
