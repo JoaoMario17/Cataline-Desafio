@@ -31,7 +31,7 @@
     methods: {
       showGroup(id){
         if(id != undefined){
-          this.currentGroupId = id;
+          this.currentGroupId = Number(id);
         } 
         this.currentView = "Group"
       }, 
@@ -49,7 +49,7 @@
         if(this.currentView === "Group"){
           props = {id: this.currentGroupId}
         }else if(this.currentView === "Question"){
-          props = {group_id: this.currentGroupId, question_id: this.currentQuestionId}
+          props = {question_id: this.currentQuestionId}
         }
         return props
       },

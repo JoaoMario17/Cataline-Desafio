@@ -7,7 +7,7 @@
       <p>Escolha a categoria desejada</p>
     </section>
 
-    <section class="card-buttons">
+    <!-- <section class="card-buttons">
       <div @click="$emit('groupSelect',1)">
         <img src="../assets/images/rocket.svg" alt="">
         <p>{{titles[0].title}}</p>
@@ -24,28 +24,39 @@
         <img src="../assets/images/partnership.svg" alt="">
         <p>{{titles[3].title}}</p>
       </div>
+    </section> -->
+    <section class="card-buttons">
+      <div v-for="category in $getAllFaqs" :key="category.id" @click="$emit('groupSelect',category.id)">
+        <img :src="require(`@/assets/images/${category.icon}`)" alt="">
+        <p>{{category.title}}</p>
+      </div>
     </section>
   </div>
 </template>
 
-<script>
+<script> 
+  import {mapGetters,mapActions} from 'vuex'
+
   export default{
     emits: ["groupSelect","fpback","questionselect","gback"],
     data(){
-      return{
-        titles: [{id: 0, title: ""}]
+      return {
+
       }
     },
     created(){
-      this.$store.dispatch('fetchData')
-      this.setData()
+      this.fetchData
     },
     computed: {
-      $allFaqsTitles(){
-        return this.$store.getters.$allFaqsTitles
-      },
+      ...mapGetters([
+        '$getAllFaqs',
+        '$getFaqById'
+      ])
     },
     methods: {
+      ...mapActions([
+        'fetchData'
+      ]),
       setData(){
         this.titles = this.$allFaqsTitles
       },

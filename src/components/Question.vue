@@ -6,80 +6,39 @@
       </div>
 
       <div class="question-up-box-text-box">
-        <p>{{getQuestionTitle()}}</p>
+        <p>{{questionTitle}}</p>
       </div>
     </div>
 
-    <p class="question-content" v-html="getQuestionContent()">
+    <p class="question-content" v-html="questionContent">
     </p>
   </div>
   
 </template>
 
 <script>
+  import {mapGetters} from 'vuex'
+
 export default{
   emits: ["groupSelect","fpback","questionselect","gback"],
   props: {
-    group_id: Number,
     question_id: Number
   },
   created(){
-    this.$store.dispatch('fetchData')
-    this.setData()
-  },
-  data(){
-    return{
-      faqs: [],
-    }
+    console.log(this.$getQuestionById(this.$props.question_id))
   },
   computed: {
-    $allFaqs(){
-      return this.$store.getters.$allFaqs
-    }
-  },
-  methods: {
-    setData(){
-      this.faqs = this.$allFaqs
+    ...mapGetters([
+      '$getQuestions',
+      '$getQuestionById'
+    ]),
+    questionTitle(){
+      return this.$getQuestionById(this.$props.question_id)[0].title
     },
-    getQuestionTitle(){
-      let questions = []
-      let question_title = ""
-
-      for(let i = 0; i<this.faqs.length ; i++){
-        if(this.faqs[i].id == this.$props.group_id){
-          questions = this.faqs[i].questions
-        }
-      }
-
-      for(let i = 0 ; i<questions.length ; i++){
-        if(questions[i].id == this.$props.question_id){
-          question_title = questions[i].title;
-        }
-      }
-
-      return question_title
-    },
-    getQuestionContent(){
-      let questions = []
-      let question_content
-
-      for(let i = 0; i<this.faqs.length ; i++){
-        if(this.faqs[i].id == this.$props.group_id){
-          questions = this.faqs[i].questions
-        }
-      }
-
-      for(let i = 0 ; i<questions.length ; i++){
-        if(questions[i].id == this.$props.question_id){
-          question_content = questions[i].content;
-        }
-      }
-
-      return question_content
-  
+    questionContent(){
+      return this.$getQuestionById(this.$props.question_id)[0].content
     }
   }
-
 }
 
 </script>

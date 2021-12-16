@@ -9,14 +9,14 @@
         <h1>{{groupTitle}}</h1>
         <p>Selecione uma pergunta</p>
       </div>
-      <img class="group-up-box-logo" :src="require(`@/assets/images/${getIconPath}`)" :alt="id">
+      <img class="group-up-box-logo" :src="require(`@/assets/images/${groupIcon}`)" :alt="id">
     </div>
 
     <hr class="group-line-divider" width="95%">
 
     <div class="group-questions-box">
       <ul class="group-questions-list">
-        <li @click="$emit('questionselect',question.id)" v-for="(question,index) in getQUestions" :key="index">
+        <li @click="$emit('questionselect',question.id)" v-for="question in groupQuestions" :key="question.id">
           {{question.title}}
         </li>
         
@@ -26,64 +26,28 @@
 </template>
 
 <script>
+  import {mapGetters} from 'vuex'
 
   export default{
     emits: ["groupSelect","fpback","questionselect","gback"],
     props: {
       id: Number
     },
-    data(){
-      return{
-        faqs: [],
-        string: 'partnership.svg'
-      }
-    },
-    created(){
-      this.$store.dispatch('fetchData')
-      this.setData()
-    },
     computed: {
-      $allFaqs(){
-        return this.$store.getters.$allFaqs
-      },
+      ...mapGetters([
+        '$getAllFaqs',
+        '$getFaqById'
+      ]),
       groupTitle(){
-        var title = "titulo";
-
-        for(var i = 0; i<this.faqs.length ; i++){
-          if(this.faqs[i].id == this.$props.id){
-            title = this.faqs[i].title
-          }
-        }
-        return title
+        return this.$getFaqById(this.$props.id)[0].title
       },
-      getIconPath(){
-        var icon = ''
-
-        for(var i = 0; i<this.faqs.length ; i++){
-          if(this.faqs[i].id == this.$props.id){
-            icon += this.faqs[i].icon
-          }
-        }
-        return icon
+      groupIcon(){
+        return this.$getFaqById(this.$props.id)[0].icon
       },
-      getQUestions(){
-        var questions = []
-
-        for(var i = 0; i<this.faqs.length ; i++){
-          if(this.faqs[i].id == this.$props.id){
-            questions = this.faqs[i].questions
-          }
-        }
-
-        return questions
-      }
-    },
-    methods: {
-      setData(){
-        this.faqs = this.$allFaqs;
+      groupQuestions(){
+        return this.$getFaqById(this.$props.id)[0].questions
       }
     }
-
   }
 </script>
 

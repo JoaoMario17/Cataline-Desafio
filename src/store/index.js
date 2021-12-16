@@ -18,17 +18,27 @@ export default createStore({
     }
   },
   getters: {
-    $allFaqs(state){
+    $getAllFaqs: (state) => {
       return state.faqCategories
     },
-    $allFaqsTitles(state){
-      let title = []
+    $getFaqById: (state) => (id) => {
+      return state.faqCategories.filter(faq => faq.id == id)
+    },
+    $getQuestions: (state) => {
+      let questions = []
 
-      for(var i = 0 ; i<state.faqCategories.length ; i++){
-        title.push({id:state.faqCategories[i].id ,title: state.faqCategories[i].title})
-      }
+      state.faqCategories.forEach(faq => {
+        faq.questions.forEach(question => {
+          questions.push(question)
+        })
+      })
 
-      return title
+      return questions
+    },
+    $getQuestionById: (state,getters) => (id) => {
+      let questions = getters.$getQuestions
+
+      return questions.filter(question => question.id == id)
     }
   },
 });
